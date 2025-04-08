@@ -9,3 +9,58 @@
     import 'relative/path/to/stylesheet.scss';
 
 */
+
+
+h1 {
+    font-family: Codystar;
+    margin-bottom: 20px;
+}
+
+
+.first-Sheet {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 20px;
+    font-family: Indie Flower, cursive;
+    border: 1px solid #ddd;
+    
+}
+
+.topictext {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.listoftopics {
+    padding: 1px;
+    margin: 1px;
+    list-style: none;
+}
+
+.topicplaced {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 5px;
+    border-bottom: 1px solid;
+    font-size: 16px;
+    position: relative;
+}
+.removeX{
+    cursor: pointer;
+    color: red;
+    display: inline-block;
+}
+.voidp {
+    text-align: center;
+    color: #2ff707;
+    font-size: 20px;
+}
+.itemsleft{
+    color: red;
+    text-align: center;
+    margin: auto;
+}

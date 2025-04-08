@@ -34,10 +34,10 @@ function ToDoList() {
 
 
 	return (
-		<div className="first-Sheet">
-			<h1> What's Your Next Step? </h1>
+		<div className="first-Sheet rounded border border-dark ">
+			<h1><strong> What's Your Next Step?</strong></h1>
 			<input
-				className="topictext"
+				className="topictext rounded "
 				type="text"
 				value={topic}
 				onChange={handleChange}
@@ -45,35 +45,45 @@ function ToDoList() {
 				placeholder="Type here..."
 			/>
 			{topics.length === 0 ? (
-				<p className="voidp">Still waiting...</p>
+				<p className="voidp"><strong> Nothing yet...</strong></p>
 			) : (
-				<ul className="listoftopics">
-					{topics.map((t, index) => (
-						<li
-							key={index}
-							className="topicplaced"
-							onMouseEnter={() => setHover(index)}
-							onMouseLeave={() => setHover(null)}
-						>
-							<span>{t}</span>
-							{hover === index && (
-								<span
-									className="removeX"
-									onClick={() => handleDelete(index)}
-								>
-									❌
-								</span>
-							)}
-						</li>
-					))}
-				</ul>
+				<>
+					<ul className="listoftopics">
+						{topics.map((t, index) => (
+							<li
+								key={index}
+								className="topicplaced"
+								onMouseEnter={() => setHover(index)}
+								onMouseLeave={() => setHover(null)}
+							>
+								<span>{t}</span>
+								{hover === index && (
+									<span
+										className="removeX"
+										onClick={() => handleDelete(index)}
+									>
+										❌
+									</span>
+								)}
+							</li>
+						))}
+					</ul>
+					<p className="itemsleft">
+						{topics.length} {topics.length === 1 ? 'task' : 'tasks'} left.
+					</p>
+				</>
 			)}
 
 		</div>
-	)}
+	)
+}
 export default ToDoList;
 //errores:
 //15:10 no se por que me aparece cada letra en un renglón... arreglado
 //No me guarda las tareas, las escribo y se borran solas despues de unos segundos: 
 //onClick={(handleDelete(index))} era esta linea... corregido
-//15:41wwwwww Ya guarda la información... ya estoy cansado al rato hago estilos.
+//15:41Ya guarda la información... ya estoy cansado al rato hago estilos.
+//19:10 estilos;
+//intentar cambiar el cursos cuando se elimine por uno personalizado. 
+//el "still waiting del H1 no me gustó, cambiarlo..."
+//20:33 TERMINAMOS!
