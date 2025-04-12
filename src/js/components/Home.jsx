@@ -1,19 +1,85 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 //include images into your bundle
 import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 
-//Perdón por los comments estoy haciendo mi código mientras repito la clase, estuvo dificil de entender.
-
 function ToDoList() {
 	// no se me ocurren nombres cool para las cons, Aqui guardamos lo que escribimos.
+	//username = 'bdiaz18'
 	const [topic, setTopic] = useState('');
 	const [topics, setTopics] = useState([]);
 	const [hover, setHover] = useState(null)
+	const username = 'bdiaz18'
+	useEffect(() => {
+		createUser();
+		getUserTodos();
+	}, []);
 
-	// aqui se actualiza lo que escribimos.
+
+	//Minuto 10:42 repetición de clase y Aaron no se calla
+	//lo intenté con usuario fijo pero me dio errores, tratemos con user dinámico. Qué pereza cambiar todo
+
+	const createUser = () => {
+		fetch(`https://playground.4geeks.com/todo/users/${username}`, {
+			method: "POST",
+			headers: {
+				'content-type': 'application/json'
+			}
+		})
+			.then(resp => {
+				if (!resp.ok) throw new Error(`error status code: ${resp.status}`)
+				return resp.json()
+			})
+			//poner respuestas en los consoles... para que sea mas claro bro.
+			.then(data => console.log('user created', data))
+			.catch(err => console.log( 'user already exists', err))
+	}
+	const getUserTodos = () => {
+		fetch(`https://playground.4geeks.com/todo/users/${username}`)
+			.then(resp => {
+				console.log(resp)
+				if (!resp.ok) throw new Error(`error status code: ${resp.status}`)
+				return resp.json()
+			})
+			.then(data => setTopics(data.todos))
+			.catch(err => console.log(err))
+	}
+	//minuto 18:57
+	const createTask = () => {
+		fetch(`https://playground.4geeks.com/todo/todos/${username}`, {
+			method: "POST",
+			headers: {
+				'content-type': 'application/json'
+			},
+			body: JSON.stringify({label: topic, is_done:false})
+		})
+			.then(resp => {
+				if (!resp.ok) throw new Error(`error status code: ${resp.status}`)
+				return resp.json()
+			})
+			.then(() => {
+				setTopic('')
+				getUserTodos();
+			})
+			.catch(err => console.log(err))
+	}
+	const deleteTask = (id) => {
+		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
+			method: 'DELETE'
+		})
+			.then(resp => {
+				if (!resp.ok) throw new Error(`Error: ${resp.status}`);
+				return resp.json();
+			})
+			.then(() => getUserTodos())
+			.catch(err => console.log(err));
+	}
+
+	//minuto 19:26
+
+	//Minuto 13:28
 
 	const handleChange = (e) => {
 		setTopic(e.target.value)
@@ -21,15 +87,10 @@ function ToDoList() {
 
 	const handleKeyPress = (e) => {
 		if (e.key === 'Enter' && topic.trim() !== '') {
-			setTopics([...topics, topic.trim()]); //15:32 el error era de aquí era "topics" primero
-			setTopic('');
+			createTask(); //tan simple como esto y me tomó 3 horas...
 		}
 	};
-	//filter está mejor, splice es un asco me tiró error.
-	//se usan _ "guión bajo" si no necesitamos el valor de la tarea.
-	const handleDelete = (indexToDelete) => {
-		setTopics(topics.filter((_, index) => index !== indexToDelete))
-	}
+
 	// NO OLVIDAR LOS PUNTO Y COMA ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
@@ -60,7 +121,7 @@ function ToDoList() {
 								{hover === index && (
 									<span
 										className="removeX"
-										onClick={() => handleDelete(index)}
+										onClick={() => deleteTask(t.id)}
 									>
 										❌
 									</span>
@@ -77,13 +138,5 @@ function ToDoList() {
 		</div>
 	)
 }
+
 export default ToDoList;
-//errores:
-//15:10 no se por que me aparece cada letra en un renglón... arreglado
-//No me guarda las tareas, las escribo y se borran solas despues de unos segundos: 
-//onClick={(handleDelete(index))} era esta linea... corregido
-//15:41Ya guarda la información... ya estoy cansado al rato hago estilos.
-//19:10 estilos;
-//intentar cambiar el cursos cuando se elimine por uno personalizado. 
-//el "still waiting del H1 no me gustó, cambiarlo..."
-//20:33 TERMINAMOS!
