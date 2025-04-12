@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 //include images into your bundle
-import rigoImage from "../../img/rigo-baby.jpg";
+//import rigoImage from "../../img/rigo-baby.jpg";
 
 //create your first component
 
@@ -34,7 +34,7 @@ function ToDoList() {
 			})
 			//poner respuestas en los consoles... para que sea mas claro bro.
 			.then(data => console.log('user created', data))
-			.catch(err => console.log( 'user already exists', err))
+			.catch(err => console.log('user already exists', err))
 	}
 	const getUserTodos = () => {
 		fetch(`https://playground.4geeks.com/todo/users/${username}`)
@@ -53,7 +53,7 @@ function ToDoList() {
 			headers: {
 				'content-type': 'application/json'
 			},
-			body: JSON.stringify({label: topic, is_done:false})
+			body: JSON.stringify({ label: topic, is_done: false })
 		})
 			.then(resp => {
 				if (!resp.ok) throw new Error(`error status code: ${resp.status}`)
@@ -65,15 +65,14 @@ function ToDoList() {
 			})
 			.catch(err => console.log(err))
 	}
+	// Sugerencia para el próximo proyecto, Tratar de seguir mas las instrucciones de Javier, ME hubiera ahorrado 2 horas---
 	const deleteTask = (id) => {
-		fetch(`https://playground.4geeks.com/todo/todos/${id}`, {
-			method: 'DELETE'
+		fetch('https://playground.4geeks.com/todo/todos/' + id, {
+			method: 'DELETE',
 		})
 			.then(resp => {
-				if (!resp.ok) throw new Error(`Error: ${resp.status}`);
-				return resp.json();
+				getUserTodos()
 			})
-			.then(() => getUserTodos())
 			.catch(err => console.log(err));
 	}
 
@@ -90,6 +89,23 @@ function ToDoList() {
 			createTask(); //tan simple como esto y me tomó 3 horas...
 		}
 	};
+	// otro bache, la herramienta de borrar todo no funciona, intentar con promise...
+
+	const clearAllTasks = () => {
+		if (!window.confirm("Are you sure you want to clear alllllll that stuff?")) return;//<-- no era necesario, pero me gustó... :D
+		const deletePromises = topics.map((task) =>
+			fetch(`https://playground.4geeks.com/todo/todos/${task.id}`, {
+				method: 'DELETE' //Siempre en mayus... ya van 2 errores perro
+			})
+		);
+		Promise.all(deletePromises)
+			.then(() => {
+				setTopics([]); 0
+			})
+			.catch(err => console.log(err));
+	};
+//Bueno, Gracias al video de promises.... si servía promises.
+
 
 	// NO OLVIDAR LOS PUNTO Y COMA ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -110,15 +126,15 @@ function ToDoList() {
 			) : (
 				<>
 					<ul className="listoftopics">
-						{topics.map((t, index) => (
+						{topics.map((t) => (
 							<li
-								key={index}
+								key={t.id}
 								className="topicplaced"
-								onMouseEnter={() => setHover(index)}
+								onMouseEnter={() => setHover(t.id)}
 								onMouseLeave={() => setHover(null)}
 							>
-								<span>{t}</span>
-								{hover === index && (
+								<span>{t.label}</span>
+								{hover === t.id && (
 									<span
 										className="removeX"
 										onClick={() => deleteTask(t.id)}
@@ -132,10 +148,15 @@ function ToDoList() {
 					<p className="itemsleft">
 						{topics.length} {topics.length === 1 ? 'task' : 'tasks'} left.
 					</p>
+					<button className="btn btn-danger mt-3" onClick={clearAllTasks}>
+						Limpiar todo
+					</button>
 				</>
 			)}
 
 		</div>
+
+
 	)
 }
 
