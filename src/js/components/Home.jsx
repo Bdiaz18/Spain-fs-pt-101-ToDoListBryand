@@ -149,7 +149,7 @@ function ToDoList() {
 						{topics.length} {topics.length === 1 ? 'task' : 'tasks'} left.
 					</p>
 					<button className="btn btn-danger mt-3" onClick={clearAllTasks}>
-						Limpiar todo
+						Please Clean this mess.
 					</button>
 				</>
 			)}
